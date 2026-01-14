@@ -30,7 +30,7 @@ cache_path = Path('cache')  # Cache directory for web pages
 tar_gz_path = Path('tar_gz')  # Directory for monthly compressed cache files
 out_path = Path('out')
 out_file_master = out_path / 'weather_japan_master.csv'  # Output file (location master)
-out_file = out_path / 'weather_japan_org.csv'  # Output file (weather data)
+out_file = out_path / 'weather_japan_hourly_org.csv'  # Output file (weather data)
 prec_blocks_target = [  # List of target prec_name::block_name
     # The following lists prefectural capitals.
     # * Saitama: Saitama city is AMeDAS only, not an observatory. Kumagaya was chosen over Chichibu.

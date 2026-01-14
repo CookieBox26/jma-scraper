@@ -49,7 +49,7 @@ def get_jma_url(row):
     )
 
 
-def reshape_weather(weather: pd.DataFrame, master: pd.DataFrame, variables: list[str]) -> pd.DataFrame:
+def reshape(weather: pd.DataFrame, master: pd.DataFrame, variables: list[str]) -> pd.DataFrame:
     weather = weather.copy()
     weather['_hour'] = weather['時'].astype(int)
     weather['_date'] = pd.to_datetime(weather['年月日'], format='%Y%m%d')
@@ -122,19 +122,17 @@ def validate_column(
     valid_weather = weather.merge(invalid_blocks, on=['地域番号', '地点番号'], how='left', indicator=True)
     valid_weather = valid_weather[valid_weather['_merge'] == 'left_only'].drop(columns=['_merge', '_valid'])
     n_blocks = valid_weather[['地域番号', '地点番号']].drop_duplicates().shape[0]
-    out_file = f'out/weather_japan_{actual_start}_{actual_start}_{n_blocks}_blocks.csv'
-    result = reshape_weather(weather, master, [column])
-    result.to_csv(out_file, index=False, lineterminator='\n')
+    out_file = f'out/weather_japan_hourly_{actual_start}_{actual_end}_{n_blocks}_blocks.csv'
+    reshaped = reshape(weather, master, [column])
+    reshaped.to_csv(out_file, index=False, lineterminator='\n')
     print(f'Generated: {out_file}')
 
 
 def main(lb, ub, output_valid):
-    weather = pd.read_csv('out/weather_japan_org.csv', dtype=str)
+    weather = pd.read_csv('out/weather_japan_hourly_org.csv', dtype=str)
     master = pd.read_csv('out/weather_japan_master.csv', dtype=str)
     weather = weather[(weather['年月日'] >= lb.replace('-', '')) & (weather['年月日'] <= ub.replace('-', ''))]
-
-    column = '気温'
-    validate_column(weather, master, column, output_valid=output_valid)
+    validate_column(weather, master, '気温', output_valid=output_valid)
 
 
 if __name__ == '__main__':

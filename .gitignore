@@ -1,4 +1,4 @@
 cache/
 tar_gz/
 .claude/
-out/weather_japan_org*.csv
+out/weather_japan_hourly_org.csv
