@@ -120,10 +120,19 @@ def get_page(url, cache_filename):
             content = ifile.read()
     else:
         print('Not cached yet:', cache_file)
-        resp = requests.get(url)
-        resp.raise_for_status()
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                time.sleep(5)
+                resp = requests.get(url)
+                resp.raise_for_status()
+                break
+            except requests.RequestException as e:
+                if attempt < max_retries - 1:
+                    print(f'Retry {attempt + 1}/{max_retries}: {e}')
+                else:
+                    raise
         content = resp.text
-        time.sleep(2.5)
         with open(cache_file, 'w', encoding='utf8') as ofile:
             ofile.write(content)
     return content
