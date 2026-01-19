@@ -123,7 +123,7 @@ def validate_column(
     valid_weather = valid_weather[valid_weather['_merge'] == 'left_only'].drop(columns=['_merge', '_valid'])
     n_blocks = valid_weather[['地域番号', '地点番号']].drop_duplicates().shape[0]
     out_file = f'out/weather_japan_hourly_{actual_start}_{actual_end}_{n_blocks}_blocks.csv'
-    reshaped = reshape(weather, master, [column])
+    reshaped = reshape(valid_weather, master, [column])
     reshaped.to_csv(out_file, index=False, lineterminator='\n')
     print(f'Generated: {out_file}')
 
